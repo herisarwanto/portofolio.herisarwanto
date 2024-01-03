@@ -19,4 +19,4 @@ This portfolio website is a showcase of my work, highlighting various projects a
 - Flutter
 - Bloc for State Management
 
-Feel free to explore the [Screenshot](https://raw.githubusercontent.com/herisarwanto/portofolio.herisarwanto/main/portfolio_home.png)
+Feel free to explore the (https://raw.githubusercontent.com/herisarwanto/portofolio.herisarwanto/main/portfolio_home.png)
