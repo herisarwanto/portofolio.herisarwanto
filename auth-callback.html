@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Redirecting to App</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 50px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        .container {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 30px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+        .spinner {
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-top: 3px solid white;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .link {
+            color: #ffd700;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔄 Redirecting to App</h1>
+        <div class="spinner"></div>
+        <p>Opening your Flutter app...</p>
+        <p>If the app doesn't open automatically, <a href="#" id="appLink" class="link">click here</a></p>
+    </div>
+    
+    <script>
+        // Get URL parameters from Supabase magic link
+        const urlParams = new URLSearchParams(window.location.search);
+        const accessToken = urlParams.get('access_token');
+        const refreshToken = urlParams.get('refresh_token');
+        const type = urlParams.get('type');
+        
+        // Create deep link with authentication tokens
+        let deepLink = 'com.example.flutter_supabase_integration://login-callback/';
+        const params = new URLSearchParams();
+        
+        if (accessToken) params.append('access_token', accessToken);
+        if (refreshToken) params.append('refresh_token', refreshToken);
+        if (type) params.append('type', type);
+        
+        if (params.toString()) {
+            deepLink += '?' + params.toString();
+        }
+        
+        // Update the manual link
+        document.getElementById('appLink').href = deepLink;
+        
+        // Try to open the app immediately
+        function openApp() {
+            // For mobile devices, try to open the app
+            window.location.href = deepLink;
+            
+            // Fallback: if app doesn't open, show manual link
+            setTimeout(() => {
+                // Check if we're still on this page (app didn't open)
+                if (document.visibilityState !== 'hidden') {
+                    console.log('App may not have opened, showing manual link');
+                }
+            }, 2000);
+        }
+        
+        // Open app when page loads
+        openApp();
+        
+        // Also try to open when user clicks anywhere on the page
+        document.addEventListener('click', openApp);
+        
+        // Log for debugging
+        console.log('Magic link parameters:', {
+            accessToken: accessToken ? 'present' : 'missing',
+            refreshToken: refreshToken ? 'present' : 'missing',
+            type: type,
+            deepLink: deepLink
+        });
+    </script>
+</body>
+</html> 
